@@ -20,6 +20,7 @@ public class MainPresenter implements MainMvp.RequiredPresenterOps, MainMvp.Pres
     private MainMvp.ModelOps mModel;
 
     private List<String> mTempSuggestionsList = new ArrayList<>();
+    private boolean mIsScanInProgress;
 
 
     public MainPresenter() {
@@ -68,10 +69,17 @@ public class MainPresenter implements MainMvp.RequiredPresenterOps, MainMvp.Pres
     @Override
     public void onCheckBtn(String host, ArrayList<Integer> list) {
         // TODO Network check
-        if (mView.get() != null) {
-            mView.get().updateProgressBarScanVisibility(true);
+        if (mIsScanInProgress) {
+            if (mView.get() != null) {
+                mView.get().showScanInProgressMsg();
+            }
+        } else {
+            mIsScanInProgress = true;
+            if (mView.get() != null) {
+                mView.get().updateProgressBarScanVisibility(true);
+            }
+            mModel.checkPorts(host, list, 0);
         }
-        mModel.checkPorts(host, list, 0);
     }
 
     @Override
@@ -118,6 +126,7 @@ public class MainPresenter implements MainMvp.RequiredPresenterOps, MainMvp.Pres
         if (mView.get() != null) {
             mView.get().updateScanResult(event);
             if (event.isListScanFinished) {
+                mIsScanInProgress = false;
                 mView.get().updateProgressBarScanVisibility(false);
             }
         }

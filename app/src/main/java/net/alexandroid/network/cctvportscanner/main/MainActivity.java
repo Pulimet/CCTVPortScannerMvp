@@ -3,9 +3,10 @@ package net.alexandroid.network.cctvportscanner.main;
 import android.app.SearchManager;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
@@ -18,6 +19,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
@@ -37,7 +39,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
-// TODO Check about CIDR notation.
 public class MainActivity extends AppCompatActivity implements
         MainMvp.RequiredViewOps,
         View.OnClickListener {
@@ -57,6 +58,7 @@ public class MainActivity extends AppCompatActivity implements
     private SuggestionsAdapter mSuggestionsAdapter;
 
     private SearchView.SearchAutoComplete mSearchAutoComplete;
+    private BtnsRecyclerAdapter mBtnsRecyclerAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,8 +71,8 @@ public class MainActivity extends AppCompatActivity implements
         mPresenter.onGetButtons(this);
 
         setViews();
+        setBtnsRecyclerView();
         setBanner();
-
 
     }
 
@@ -126,6 +128,13 @@ public class MainActivity extends AppCompatActivity implements
         });
     }
 
+    private void setBtnsRecyclerView() {
+        RecyclerView recyclerView = findViewById(R.id.recyclerView);
+        recyclerView.setLayoutManager(new GridLayoutManager(this, 3));
+        mBtnsRecyclerAdapter = new BtnsRecyclerAdapter(this);
+        recyclerView.setAdapter(mBtnsRecyclerAdapter);
+    }
+
     private void setBanner() {
         AdRequest adRequest = new AdRequest.Builder()
                 .addTestDevice("0694A3AE02A5874D3DB2202B251F156A").build();
@@ -172,6 +181,9 @@ public class MainActivity extends AppCompatActivity implements
             case R.id.btnClear:
                 onHostRemoveClick(v);
                 break;
+            case R.id.btn:
+                onRecyclerBtnClick(v);
+                break;
         }
     }
 
@@ -193,10 +205,26 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     private void onBtnCheckClick() {
-        ArrayList<Integer> list = isPortValid();
-        if (list != null && mHost != null) {
+        if (mHost != null) {
+            ArrayList<Integer> list = isPortValid();
+            if (list != null) {
+                mTvResult.setText("");
+                mPresenter.onCheckBtn(mHost, list);
+            }
+        } else {
+            Toast.makeText(getApplicationContext(), R.string.msg_no_host_selected, Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void onRecyclerBtnClick(View v) {
+        MyLog.d("Click on: " + ((Btn) v.getTag()).getTitle());
+        if (mHost != null) {
             mTvResult.setText("");
+            String portList = ((Btn) v.getTag()).getPorts();
+            ArrayList<Integer> list = Utils.convertStringToIntegerList(portList);
             mPresenter.onCheckBtn(mHost, list);
+        } else {
+            Toast.makeText(getApplicationContext(), R.string.msg_no_host_selected, Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -274,9 +302,8 @@ public class MainActivity extends AppCompatActivity implements
 
     // Btns control
     private void updateBtnsIfNeed(List<Btn> pBtns) {
-        // TODO Show buttons
+        mBtnsRecyclerAdapter.swapItems(pBtns);
     }
-
 
 
     /**
@@ -369,6 +396,11 @@ public class MainActivity extends AppCompatActivity implements
         }
 
         mTvResult.setText(Html.fromHtml(result.toString()));
+    }
+
+    @Override
+    public void showScanInProgressMsg() {
+        Toast.makeText(getApplicationContext(), R.string.scan_in_progress_msg, Toast.LENGTH_SHORT).show();
     }
 
     @Override

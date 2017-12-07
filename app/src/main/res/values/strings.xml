@@ -16,4 +16,6 @@
     <string name="top_banner_unit_id">ca-app-pub-2377201727291572/2184290202</string>
     <string name="key_first_start">key_first_start</string>
     <string name="key_is_default_data_added">isFirstTime</string>
+    <string name="msg_no_host_selected">Please enter host to scan</string>
+    <string name="scan_in_progress_msg">Scan in progress. Please wait.</string>
 </resources>

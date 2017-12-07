@@ -30,6 +30,9 @@ public interface MainMvp {
         void addSuggestionToAdapter(List<String> pSuggesetionsList, List<String> pTempSuggestionsList);
 
         void removeSuggestionFromAdapter(List<String> pSuggesetionsList, List<String> pTempSuggestionsList);
+
+        void showScanInProgressMsg();
+
     }
 
     /**
