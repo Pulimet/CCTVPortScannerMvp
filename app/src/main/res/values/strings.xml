@@ -1,0 +1,19 @@
+<resources>
+    <string name="app_name">CCTV Port Scanner</string>
+
+    <string name="hint_search_view">google.com/10.0.0.1</string>
+    <string name="ping">PING:</string>
+    <string name="unchecked">Unchecked</string>
+    <string name="success">Success</string>
+    <string name="fail">Fail</string>
+    <string name="re_ping_button">Re-ping button</string>
+    <string name="check">Check</string>
+    <string name="hint_port">Custom ports(80, 100–200)</string>
+    <string name="enter_custom_ports">Enter custom ports (80, 100–200)</string>
+    <string name="title_activity_main3">Main3Activity</string>
+    <string name="host">Host: %s</string>
+    <string name="key_suggestions_list">key_suggestions_list</string>
+    <string name="top_banner_unit_id">ca-app-pub-2377201727291572/2184290202</string>
+    <string name="key_first_start">key_first_start</string>
+    <string name="key_is_default_data_added">isFirstTime</string>
+</resources>
