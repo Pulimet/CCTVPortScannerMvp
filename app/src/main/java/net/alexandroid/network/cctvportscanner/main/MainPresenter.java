@@ -1,7 +1,10 @@
 package net.alexandroid.network.cctvportscanner.main;
 
+import android.support.annotation.NonNull;
+
 import net.alexandroid.network.cctvportscanner.db.Btn;
 import net.alexandroid.network.cctvportscanner.db.Host;
+import net.alexandroid.network.cctvportscanner.main.adapter.SuggestionsAdapter;
 import net.alexandroid.network.cctvportscanner.scan.PortScanFinishEvent;
 
 import java.lang.ref.WeakReference;
@@ -15,6 +18,8 @@ public class MainPresenter implements MainMvp.RequiredPresenterOps, MainMvp.Pres
 
     // Layer Model reference
     private MainMvp.ModelOps mModel;
+
+    private List<String> mTempSuggestionsList = new ArrayList<>();
 
 
     public MainPresenter() {
@@ -121,8 +126,28 @@ public class MainPresenter implements MainMvp.RequiredPresenterOps, MainMvp.Pres
     @Override
     public void onSuggestionsUpdated(List<Host> suggestionsList) {
         if (mView.get() != null) {
-            mView.get().onSuggestionsUpdated(suggestionsList);
+            List<String> suggesetionsList = convertoToListOfStrings(suggestionsList);
+            SuggestionsAdapter suggestionsAdapter = mView.get().getSuggestionsAdapter();
+            if (suggestionsAdapter.getCount() == 0) {
+                suggestionsAdapter.addAll(suggesetionsList);
+            } else {
+                if (suggestionsList.size() > mTempSuggestionsList.size()) {
+                    mView.get().addSuggestionToAdapter(suggesetionsList, mTempSuggestionsList);
+                } else {
+                    mView.get().removeSuggestionFromAdapter(suggesetionsList, mTempSuggestionsList);
+                }
+            }
+            mTempSuggestionsList = suggesetionsList;
         }
+    }
+
+    @NonNull
+    private ArrayList<String> convertoToListOfStrings(List<Host> pSuggestionsList) {
+        ArrayList<String> newList = new ArrayList<>();
+        for (Host host : pSuggestionsList) {
+            newList.add(host.getHost());
+        }
+        return newList;
     }
 
     @Override

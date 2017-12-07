@@ -2,6 +2,7 @@ package net.alexandroid.network.cctvportscanner.main;
 
 import net.alexandroid.network.cctvportscanner.db.Btn;
 import net.alexandroid.network.cctvportscanner.db.Host;
+import net.alexandroid.network.cctvportscanner.main.adapter.SuggestionsAdapter;
 import net.alexandroid.network.cctvportscanner.scan.PortScanFinishEvent;
 
 import java.util.ArrayList;
@@ -22,9 +23,13 @@ public interface MainMvp {
 
         void updateProgressBarScanVisibility(boolean visible);
 
-        void onSuggestionsUpdated(List<Host> suggestionsList);
-
         void onBtnsUpdated(List<Btn> pBtns);
+
+        SuggestionsAdapter getSuggestionsAdapter();
+
+        void addSuggestionToAdapter(List<String> pSuggesetionsList, List<String> pTempSuggestionsList);
+
+        void removeSuggestionFromAdapter(List<String> pSuggesetionsList, List<String> pTempSuggestionsList);
     }
 
     /**

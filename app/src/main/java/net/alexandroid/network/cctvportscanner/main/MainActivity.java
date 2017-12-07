@@ -55,7 +55,7 @@ public class MainActivity extends AppCompatActivity implements
     private ProgressBar mProgressBarScan;
     private String mTempHost;
     private SuggestionsAdapter mSuggestionsAdapter;
-    private List<String> mTempSuggestionsList = new ArrayList<>();
+
     private SearchView.SearchAutoComplete mSearchAutoComplete;
 
     @Override
@@ -254,7 +254,7 @@ public class MainActivity extends AppCompatActivity implements
             mSearchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
         }
 
-        mSuggestionsAdapter = new SuggestionsAdapter(getApplicationContext(), mTempSuggestionsList);
+        mSuggestionsAdapter = new SuggestionsAdapter(getApplicationContext(), new ArrayList<String>());
         mSearchAutoComplete.setAdapter(mSuggestionsAdapter);
         mSuggestionsAdapter.setOnClickListener(this);
     }
@@ -268,51 +268,6 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     // Suggestions control
-    private void setSuggestionsAdapter(List<Host> pSuggestionsList) {
-        List<String> suggesetionsList = convertoToListOfStrings(pSuggestionsList);
-
-        if (mSuggestionsAdapter.getCount() == 0) {
-            mSuggestionsAdapter.addAll(suggesetionsList);
-        } else {
-            if (pSuggestionsList.size() > mTempSuggestionsList.size()) {
-                addSuggestionToAdapter(suggesetionsList, mTempSuggestionsList);
-            } else {
-                removeSuggestionFromAdapter(suggesetionsList, mTempSuggestionsList);
-            }
-        }
-
-        mTempSuggestionsList = suggesetionsList;
-    }
-
-    @NonNull
-    private ArrayList<String> convertoToListOfStrings(List<Host> pSuggestionsList) {
-        ArrayList<String> newList = new ArrayList<>();
-        for (Host host : pSuggestionsList) {
-            newList.add(host.getHost());
-        }
-        return newList;
-    }
-
-    private void removeSuggestionFromAdapter(List<String> newList, List<String> oldList) {
-        for (String host : oldList) {
-            if (!newList.contains(host)) {
-                mSuggestionsAdapter.remove(host);
-                // Workaround to update the list
-                mSearchAutoComplete.setText(mSearchAutoComplete.getText());
-                break;
-            }
-        }
-    }
-
-    private void addSuggestionToAdapter(List<String> newList, List<String> oldList) {
-        for (String host : newList) {
-            if (!oldList.contains(host)) {
-                mSuggestionsAdapter.add(host);
-                break;
-            }
-        }
-    }
-
     private void removeSuggestionFromDb(String pHost) {
         mPresenter.onRemoveSuggestionFromDb(new Host(pHost));
     }
@@ -417,11 +372,32 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void onSuggestionsUpdated(List<Host> suggestionsList) {
-        MyLog.d("");
-
-        setSuggestionsAdapter(suggestionsList);
+    public SuggestionsAdapter getSuggestionsAdapter() {
+        return mSuggestionsAdapter;
     }
+
+    @Override
+    public void removeSuggestionFromAdapter(List<String> newList, List<String> oldList) {
+        for (String host : oldList) {
+            if (!newList.contains(host)) {
+                mSuggestionsAdapter.remove(host);
+                // Workaround to update the list
+                mSearchAutoComplete.setText(mSearchAutoComplete.getText());
+                break;
+            }
+        }
+    }
+
+    @Override
+    public void addSuggestionToAdapter(List<String> newList, List<String> oldList) {
+        for (String host : newList) {
+            if (!oldList.contains(host)) {
+                mSuggestionsAdapter.add(host);
+                break;
+            }
+        }
+    }
+
 
     @Override
     public void onBtnsUpdated(List<Btn> pBtns) {
