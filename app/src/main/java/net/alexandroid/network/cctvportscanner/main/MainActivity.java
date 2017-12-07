@@ -1,9 +1,12 @@
 package net.alexandroid.network.cctvportscanner.main;
 
+import android.app.Activity;
 import android.app.SearchManager;
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -15,6 +18,8 @@ import android.text.TextWatcher;
 import android.view.Menu;
 import android.view.View;
 import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -166,6 +171,14 @@ public class MainActivity extends AppCompatActivity implements
         }
     }
 
+    public void hideSoftKeyboard() {
+        InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE);
+        View viewWithCurrentFocus = getCurrentFocus();
+        if (inputMethodManager != null && viewWithCurrentFocus != null) {
+            inputMethodManager.hideSoftInputFromWindow(viewWithCurrentFocus.getWindowToken(), 0);
+        }
+    }
+
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -205,24 +218,25 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     private void onBtnCheckClick() {
-        if (mHost != null) {
-            ArrayList<Integer> list = isPortValid();
-            if (list != null) {
-                mTvResult.setText("");
-                mPresenter.onCheckBtn(mHost, list);
-            }
-        } else {
-            Toast.makeText(getApplicationContext(), R.string.msg_no_host_selected, Toast.LENGTH_SHORT).show();
-        }
+        ArrayList<Integer> list = isPortValid();
+        checkPorts(list);
     }
 
     private void onRecyclerBtnClick(View v) {
         MyLog.d("Click on: " + ((Btn) v.getTag()).getTitle());
+        String portList = ((Btn) v.getTag()).getPorts();
+        ArrayList<Integer> list = Utils.convertStringToIntegerList(portList);
+        checkPorts(list);
+    }
+
+    private void checkPorts(ArrayList<Integer> pList) {
         if (mHost != null) {
-            mTvResult.setText("");
-            String portList = ((Btn) v.getTag()).getPorts();
-            ArrayList<Integer> list = Utils.convertStringToIntegerList(portList);
-            mPresenter.onCheckBtn(mHost, list);
+            if (pList != null) {
+                mTvResult.setText("");
+                mPresenter.onCheckBtn(mHost, pList);
+                mInputPort.clearFocus();
+                hideSoftKeyboard();
+            }
         } else {
             Toast.makeText(getApplicationContext(), R.string.msg_no_host_selected, Toast.LENGTH_SHORT).show();
         }
@@ -303,6 +317,63 @@ public class MainActivity extends AppCompatActivity implements
     // Btns control
     private void updateBtnsIfNeed(List<Btn> pBtns) {
         mBtnsRecyclerAdapter.swapItems(pBtns);
+    }
+
+    // Dialogs
+    // TODO continue from here
+    public void showAddOrEditDialog(final Btn pBtn, final boolean addingBtn) {
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
+        View view = getLayoutInflater().inflate(R.layout.dialog_edit_btns_fragment, null);
+        alertDialog.setTitle(addingBtn ? getString(R.string.add_btn) : getString(R.string.edit_btn));
+        alertDialog.setView(view);
+        alertDialog.setPositiveButton(addingBtn ? getString(R.string.add) : getString(R.string.save), null);
+        final EditText etTitle = view.findViewById(R.id.input_title);
+        final EditText etPort = view.findViewById(R.id.input_port);
+        if (!addingBtn) {
+            etTitle.setText(pBtn.getTitle());
+            etPort.setText(pBtn.getPorts());
+        }
+
+        final AlertDialog dialog = alertDialog.create();
+        dialog.setOnShowListener(new DialogInterface.OnShowListener() {
+            @Override
+            public void onShow(DialogInterface d) {
+                Button button = dialog.getButton(DialogInterface.BUTTON_POSITIVE);
+                button.setOnClickListener(new View.OnClickListener() {
+                    @SuppressWarnings("ConstantConditions")
+                    @Override
+                    public void onClick(View v) {
+                        MyLog.d("onClick");
+                        String newTitle = etTitle.getText().toString().trim();
+                        String newPorts = etPort.getText().toString().trim();
+                        ArrayList<Integer> list = Utils.convertStringToIntegerList(newPorts);
+                        String checkedPorts = Utils.convertIntegerListToString(list);
+                        etPort.setText(checkedPorts);
+
+                        MyLog.d("title: " + newTitle);
+                        MyLog.d("checkedPorts: " + checkedPorts);
+
+                        if (newTitle.length() > 0 && checkedPorts.length() > 0) {
+                            if (addingBtn) {
+                                MyLog.d("Btn add");
+//                                addToDb(newTitle, checkedPorts);
+//                                Snackbar.make(getView(), R.string.added, Snackbar.LENGTH_SHORT).show();
+                                dialog.dismiss();
+                            } else {
+                                MyLog.d("Btn edit");
+//                                editRowDb(title, ports, newTitle, checkedPorts);
+//                                Snackbar.make(getView(), R.string.saved, Snackbar.LENGTH_SHORT).show();
+                                dialog.dismiss();
+                            }
+                        } else {
+                            MyLog.d("Wrong parameters");
+//                            Snackbar.make(etTitle, R.string.wrong_params, Snackbar.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+            }
+        });
+        dialog.show();
     }
 
 

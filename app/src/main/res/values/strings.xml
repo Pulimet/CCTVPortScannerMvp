@@ -18,4 +18,9 @@
     <string name="key_is_default_data_added">isFirstTime</string>
     <string name="msg_no_host_selected">Please enter host to scan</string>
     <string name="scan_in_progress_msg">Scan in progress. Please wait.</string>
+    <string name="title">Title</string>
+    <string name="add_btn">Add Button</string>
+    <string name="edit_btn">Edit button</string>
+    <string name="add">Add</string>
+    <string name="save">Save</string>
 </resources>
