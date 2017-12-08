@@ -149,18 +149,33 @@ public class MainModel implements MainMvp.ModelOps {
     }
 
     @Override
-    public void removeBtn() {
-
+    public void removeBtn(final Context ctx, final Btn pBtn) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                AppDatabase.getInstance(ctx).btnDao().delete(pBtn);
+            }
+        }).start();
     }
 
     @Override
-    public void editBtn() {
-
+    public void editBtn(final Context ctx, final Btn pBtn) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                AppDatabase.getInstance(ctx).btnDao().insert(pBtn);
+            }
+        }).start();
     }
 
     @Override
-    public void addBtn() {
-
+    public void addBtn(final Context ctx, final Btn pBtn) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                AppDatabase.getInstance(ctx).btnDao().insert(pBtn);
+            }
+        }).start();
     }
 
 }

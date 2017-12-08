@@ -1,5 +1,6 @@
 package net.alexandroid.network.cctvportscanner.main;
 
+import android.content.Context;
 import android.support.annotation.NonNull;
 
 import net.alexandroid.network.cctvportscanner.db.Btn;
@@ -93,18 +94,18 @@ public class MainPresenter implements MainMvp.RequiredPresenterOps, MainMvp.Pres
     }
 
     @Override
-    public void onRemoveBtn(int btnPosition) {
-
+    public void onRemoveBtn(Context pApplicationContext, Btn pBtn) {
+        mModel.removeBtn(pApplicationContext, pBtn);
     }
 
     @Override
-    public void onEditBtn(int btnPosition, String title, String ports) {
-
+    public void onEditBtn(Context pApplicationContext, Btn pBtn) {
+        mModel.editBtn(pApplicationContext, pBtn);
     }
 
     @Override
-    public void onAddBtn(String title, String ports) {
-
+    public void onAddBtn(Context pApplicationContext, String title, String ports) {
+        mModel.addBtn(pApplicationContext, new Btn(title, ports));
     }
 
 

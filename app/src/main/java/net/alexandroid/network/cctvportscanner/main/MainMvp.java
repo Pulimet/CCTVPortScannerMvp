@@ -1,5 +1,7 @@
 package net.alexandroid.network.cctvportscanner.main;
 
+import android.content.Context;
+
 import net.alexandroid.network.cctvportscanner.db.Btn;
 import net.alexandroid.network.cctvportscanner.db.Host;
 import net.alexandroid.network.cctvportscanner.main.adapter.SuggestionsAdapter;
@@ -52,11 +54,11 @@ public interface MainMvp {
 
         void onGetSuggestions(MainActivity pMainActivity);
 
-        void onRemoveBtn(int btnPosition);
+        void onRemoveBtn(Context pApplicationContext, Btn pBtn);
 
-        void onEditBtn(int btnPosition, String title, String ports);
+        void onEditBtn(Context pApplicationContext, Btn pBtn);
 
-        void onAddBtn(String title, String ports);
+        void onAddBtn(Context pApplicationContext, String title, String ports);
 
         void onRemoveSuggestionFromDb(Host pQuery);
 
@@ -102,11 +104,11 @@ public interface MainMvp {
 
         void getButtons(MainActivity pMainActivity);
 
-        void removeBtn();
+        void removeBtn(Context pApplicationContext, Btn pBtn);
 
-        void editBtn();
+        void editBtn(Context pApplicationContext, Btn pBtn);
 
-        void addBtn();
+        void addBtn(Context pApplicationContext, Btn pBtn);
     }
 
 }

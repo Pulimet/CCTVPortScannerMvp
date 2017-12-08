@@ -16,11 +16,13 @@ import java.util.List;
 public class BtnsRecyclerAdapter extends RecyclerView.Adapter<BtnsRecyclerAdapter.ViewHolder> {
 
     private final View.OnClickListener mClickListener;
+    private final View.OnLongClickListener mLongClickListener;
 
     private List<Btn> mBtnList = new ArrayList<>();
 
     public BtnsRecyclerAdapter(MainActivity pMainActivity) {
         mClickListener = pMainActivity;
+        mLongClickListener = pMainActivity;
     }
 
     public void swapItems(List<Btn> pBtns) {
@@ -48,6 +50,7 @@ public class BtnsRecyclerAdapter extends RecyclerView.Adapter<BtnsRecyclerAdapte
         holder.mButton.setText(mBtnList.get(position).getTitle());
         holder.mButton.setTag(mBtnList.get(position));
         holder.mButton.setOnClickListener(mClickListener);
+        holder.mButton.setOnLongClickListener(mLongClickListener);
     }
 
     @Override

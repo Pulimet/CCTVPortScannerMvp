@@ -5,6 +5,7 @@ import android.app.SearchManager;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -16,6 +17,7 @@ import android.text.Editable;
 import android.text.Html;
 import android.text.TextWatcher;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
@@ -46,7 +48,8 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class MainActivity extends AppCompatActivity implements
         MainMvp.RequiredViewOps,
-        View.OnClickListener {
+        View.OnClickListener,
+        View.OnLongClickListener {
 
     private MainMvp.PresenterOps mPresenter;
     private SearchView mSearchView;
@@ -200,6 +203,16 @@ public class MainActivity extends AppCompatActivity implements
         }
     }
 
+    @Override
+    public boolean onLongClick(View v) {
+        switch (v.getId()) {
+            case R.id.btn:
+                showAddOrEditDialog((Btn) v.getTag(), false);
+                return true;
+        }
+        return false;
+    }
+
     private void onHostRemoveClick(View v) {
         String host = (String) v.getTag();
         MyLog.d("Click on btnClear, host: " + host);
@@ -251,6 +264,16 @@ public class MainActivity extends AppCompatActivity implements
         setSearchView(menu);
         mPresenter.onGetSuggestions(this);
         return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_add_button:
+                showAddOrEditDialog(null, true);
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     private void setSearchView(Menu menu) {
@@ -327,6 +350,9 @@ public class MainActivity extends AppCompatActivity implements
         alertDialog.setTitle(addingBtn ? getString(R.string.add_btn) : getString(R.string.edit_btn));
         alertDialog.setView(view);
         alertDialog.setPositiveButton(addingBtn ? getString(R.string.add) : getString(R.string.save), null);
+        if (!addingBtn) {
+            alertDialog.setNegativeButton(R.string.delete, null);
+        }
         final EditText etTitle = view.findViewById(R.id.input_title);
         final EditText etPort = view.findViewById(R.id.input_port);
         if (!addingBtn) {
@@ -338,8 +364,7 @@ public class MainActivity extends AppCompatActivity implements
         dialog.setOnShowListener(new DialogInterface.OnShowListener() {
             @Override
             public void onShow(DialogInterface d) {
-                Button button = dialog.getButton(DialogInterface.BUTTON_POSITIVE);
-                button.setOnClickListener(new View.OnClickListener() {
+                dialog.getButton(DialogInterface.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
                     @SuppressWarnings("ConstantConditions")
                     @Override
                     public void onClick(View v) {
@@ -356,19 +381,27 @@ public class MainActivity extends AppCompatActivity implements
                         if (newTitle.length() > 0 && checkedPorts.length() > 0) {
                             if (addingBtn) {
                                 MyLog.d("Btn add");
-//                                addToDb(newTitle, checkedPorts);
-//                                Snackbar.make(getView(), R.string.added, Snackbar.LENGTH_SHORT).show();
+                                mPresenter.onAddBtn(getApplicationContext(), newTitle, checkedPorts);
                                 dialog.dismiss();
                             } else {
                                 MyLog.d("Btn edit");
-//                                editRowDb(title, ports, newTitle, checkedPorts);
-//                                Snackbar.make(getView(), R.string.saved, Snackbar.LENGTH_SHORT).show();
+                                pBtn.setTitle(newTitle);
+                                pBtn.setPorts(checkedPorts);
+                                mPresenter.onEditBtn(getApplicationContext(), pBtn);
                                 dialog.dismiss();
                             }
                         } else {
                             MyLog.d("Wrong parameters");
-//                            Snackbar.make(etTitle, R.string.wrong_params, Snackbar.LENGTH_SHORT).show();
+                            Snackbar.make(etTitle, R.string.wrong_parameters, Snackbar.LENGTH_SHORT).show();
                         }
+                    }
+                });
+
+                dialog.getButton(DialogInterface.BUTTON_NEGATIVE).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View pView) {
+                        mPresenter.onRemoveBtn(getApplicationContext(), pBtn);
+                        dialog.dismiss();
                     }
                 });
             }
