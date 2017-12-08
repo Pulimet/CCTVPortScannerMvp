@@ -26,4 +26,6 @@
     <string name="add_button">Add Button</string>
     <string name="wrong_parameters">Wrong parameters</string>
     <string name="delete">Delete</string>
+    <string name="last_used_host">last_used_host</string>
+    <string name="last_used_ports">last_used_ports</string>
 </resources>

@@ -63,6 +63,12 @@ public interface MainMvp {
         void onRemoveSuggestionFromDb(Host pQuery);
 
         void onGetButtons(MainActivity pMainActivity);
+
+        void onSaveLastUsedHostAndPorts(String pHost, String pPorts);
+
+        String onGetLasUsedHost();
+
+        String onGetLasUsedPorts();
     }
 
     /**
@@ -109,6 +115,12 @@ public interface MainMvp {
         void editBtn(Context pApplicationContext, Btn pBtn);
 
         void addBtn(Context pApplicationContext, Btn pBtn);
+
+        void onSaveLastUsedHostAndPorts(String pHost, String pPorts);
+
+        String onGetLasUsedHost();
+
+        String onGetLasUsedPorts();
     }
 
 }

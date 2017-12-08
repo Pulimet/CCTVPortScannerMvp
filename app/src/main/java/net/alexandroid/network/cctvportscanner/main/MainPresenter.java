@@ -108,6 +108,20 @@ public class MainPresenter implements MainMvp.RequiredPresenterOps, MainMvp.Pres
         mModel.addBtn(pApplicationContext, new Btn(title, ports));
     }
 
+    @Override
+    public void onSaveLastUsedHostAndPorts(String pHost, String pPorts) {
+        mModel.onSaveLastUsedHostAndPorts(pHost, pPorts);
+    }
+
+    @Override
+    public String onGetLasUsedHost() {
+        return mModel.onGetLasUsedHost();
+    }
+
+    @Override
+    public String onGetLasUsedPorts() {
+        return mModel.onGetLasUsedPorts();
+    }
 
     /**
      * MainMvp.RequiredPresenterOps

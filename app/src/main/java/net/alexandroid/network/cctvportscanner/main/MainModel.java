@@ -178,4 +178,19 @@ public class MainModel implements MainMvp.ModelOps {
         }).start();
     }
 
+    @Override
+    public void onSaveLastUsedHostAndPorts(String pHost, String pPorts) {
+        ShPref.put(R.string.last_used_host, pHost);
+        ShPref.put(R.string.last_used_ports, pPorts);
+    }
+
+    @Override
+    public String onGetLasUsedHost() {
+        return ShPref.getString(R.string.last_used_host);
+    }
+
+    @Override
+    public String onGetLasUsedPorts() {
+        return ShPref.getString(R.string.last_used_ports);
+    }
 }
