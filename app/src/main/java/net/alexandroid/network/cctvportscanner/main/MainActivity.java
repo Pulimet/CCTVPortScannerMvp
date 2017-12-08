@@ -343,7 +343,6 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     // Dialogs
-    // TODO continue from here
     public void showAddOrEditDialog(final Btn pBtn, final boolean addingBtn) {
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
         View view = getLayoutInflater().inflate(R.layout.dialog_edit_btns_fragment, null);
