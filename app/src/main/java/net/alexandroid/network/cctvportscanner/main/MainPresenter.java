@@ -7,6 +7,8 @@ import net.alexandroid.network.cctvportscanner.db.Btn;
 import net.alexandroid.network.cctvportscanner.db.Host;
 import net.alexandroid.network.cctvportscanner.main.adapter.SuggestionsAdapter;
 import net.alexandroid.network.cctvportscanner.scan.PortScanFinishEvent;
+import net.alexandroid.network.cctvportscanner.utils.NetworkUtils;
+import net.alexandroid.network.cctvportscanner.utils.Utils;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -44,12 +46,18 @@ public class MainPresenter implements MainMvp.RequiredPresenterOps, MainMvp.Pres
 
     @Override
     public void onHostSubmit(Host host) {
-        // TODO Network check
         if (mView.get() != null) {
             mView.get().updateProgressBarPingVisibility(true);
         }
-        mModel.ping(host.getHost());
         mModel.addHostToDb(host);
+        mModel.ping(host.getHost());
+        networkCheck();
+    }
+
+    private void networkCheck() {
+        if (!NetworkUtils.isConnected() && mView.get()!= null) {
+            mView.get().showNoInternetConnectionMsg();
+        }
     }
 
     @Override
@@ -59,17 +67,16 @@ public class MainPresenter implements MainMvp.RequiredPresenterOps, MainMvp.Pres
 
     @Override
     public void onPingBtn(String host) {
-        // TODO Network check
         if (mView.get() != null) {
             mView.get().updateProgressBarPingVisibility(true);
         }
         mModel.ping(host);
+        networkCheck();
     }
 
 
     @Override
     public void onCheckBtn(String host, ArrayList<Integer> list) {
-        // TODO Network check
         if (mIsScanInProgress) {
             if (mView.get() != null) {
                 mView.get().showScanInProgressMsg();
@@ -80,6 +87,7 @@ public class MainPresenter implements MainMvp.RequiredPresenterOps, MainMvp.Pres
                 mView.get().updateProgressBarScanVisibility(true);
             }
             mModel.checkPorts(host, list, 0);
+            networkCheck();
         }
     }
 

@@ -28,4 +28,5 @@
     <string name="delete">Delete</string>
     <string name="last_used_host">last_used_host</string>
     <string name="last_used_ports">last_used_ports</string>
+    <string name="no_connection">No internet connection</string>
 </resources>

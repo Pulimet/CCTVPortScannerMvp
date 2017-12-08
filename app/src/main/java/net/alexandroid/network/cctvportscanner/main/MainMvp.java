@@ -35,6 +35,7 @@ public interface MainMvp {
 
         void showScanInProgressMsg();
 
+        void showNoInternetConnectionMsg();
     }
 
     /**

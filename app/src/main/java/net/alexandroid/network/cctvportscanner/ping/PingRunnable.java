@@ -3,6 +3,7 @@ package net.alexandroid.network.cctvportscanner.ping;
 import net.alexandroid.utils.mylog.MyLog;
 
 import java.io.IOException;
+import java.net.InetAddress;
 
 public class PingRunnable implements Runnable {
 
@@ -50,17 +51,12 @@ public class PingRunnable implements Runnable {
 
     private boolean pingHost(String host) {
         MyLog.d("pingHost");
-        Runtime runtime = Runtime.getRuntime();
         try {
-            Process mIpAddrProcess = runtime.exec("/system/bin/ping -c 1 " + host);
-            int mExitValue = mIpAddrProcess.waitFor();
-            MyLog.d(" mExitValue " + mExitValue);
-            return mExitValue == 0;
-        } catch (InterruptedException | IOException ex) {
-            ex.printStackTrace();
-            MyLog.d("Exception:" + ex);
+            return InetAddress.getByName(host).isReachable(TIMEOUT);
+        } catch (IOException ex) {
+            MyLog.e("Exception:" + ex.getMessage());
+            return false;
         }
-        return false;
     }
 
     public interface CallBack {

@@ -525,6 +525,11 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     @Override
+    public void showNoInternetConnectionMsg() {
+        Toast.makeText(getApplicationContext(), R.string.no_connection, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
     public SuggestionsAdapter getSuggestionsAdapter() {
         return mSuggestionsAdapter;
     }
