@@ -6,4 +6,5 @@
     <color name="appBgColor">#000000</color>
 
     <color name="pingText">#FFFFFF</color>
+    <color name="ic_launcher_background">#0072A6</color>
 </resources>

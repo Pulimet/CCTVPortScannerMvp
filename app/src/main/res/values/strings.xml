@@ -13,7 +13,6 @@
     <string name="title_activity_main3">Main3Activity</string>
     <string name="host">Host: %s</string>
     <string name="key_suggestions_list">key_suggestions_list</string>
-    <string name="top_banner_unit_id">ca-app-pub-2377201727291572/2184290202</string>
     <string name="key_first_start">key_first_start</string>
     <string name="key_is_default_data_added">isFirstTime</string>
     <string name="msg_no_host_selected">Please enter host to scan</string>
@@ -29,4 +28,6 @@
     <string name="last_used_host">last_used_host</string>
     <string name="last_used_ports">last_used_ports</string>
     <string name="no_connection">No internet connection</string>
+    <string name="admob_app_id">ca-app-pub-2377201727291572~9707557002</string>
+    <string name="top_banner_unit_id">ca-app-pub-2377201727291572/2184290202</string>
 </resources>
