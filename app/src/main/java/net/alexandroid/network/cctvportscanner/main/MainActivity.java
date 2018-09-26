@@ -3,7 +3,9 @@ package net.alexandroid.network.cctvportscanner.main;
 import android.app.Activity;
 import android.app.SearchManager;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
@@ -96,7 +98,7 @@ public class MainActivity extends AppCompatActivity implements
     protected void onStart() {
         super.onStart();
         String lastUsedHost = mPresenter.onGetLasUsedHost();
-        if (lastUsedHost!= null) {
+        if (lastUsedHost != null) {
             onHostSubmit(new Host(lastUsedHost));
         }
         String lastUsedPorts = mPresenter.onGetLasUsedPorts();
@@ -290,6 +292,10 @@ public class MainActivity extends AppCompatActivity implements
         switch (item.getItemId()) {
             case R.id.action_add_button:
                 showAddOrEditDialog(null, true);
+                return true;
+            case R.id.action_pp:
+                Uri uri = Uri.parse(getString(R.string.pp_url));
+                startActivity(new Intent(Intent.ACTION_VIEW, uri));
                 return true;
         }
         return super.onOptionsItemSelected(item);

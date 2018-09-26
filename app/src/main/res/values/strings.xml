@@ -30,4 +30,6 @@
     <string name="no_connection">No internet connection</string>
     <string name="admob_app_id">ca-app-pub-2377201727291572~9707557002</string>
     <string name="top_banner_unit_id">ca-app-pub-2377201727291572/2184290202</string>
+    <string name="privacy_policy">Privacy policy</string>
+    <string name="pp_url">http://alexandroid.net/about-alexey-korolev/cctv-port-scanner-privacy-policy/</string>
 </resources>
